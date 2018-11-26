@@ -23,9 +23,12 @@ public class SingleLinkOperatorTest {
   @Test
   public void testInsertElementByIndex() {
     Assert.assertTrue(singleLinkOperator.insertElementByIndex(linkDataStruct, 1, "0"));
-    Assert.assertEquals("0", linkDataStruct.getHead().getNext().getData());
-    Assert.assertEquals("0", singleLinkOperator.getElementByIndex(linkDataStruct, 1));
-    Assert.assertEquals("B", singleLinkOperator.getElementByIndex(linkDataStruct, 3));
+    Assert.assertArrayEquals(new String[]{"0", "A", "B", "C", "D"},
+        singleLinkOperator.getAllElements(linkDataStruct));
+    Assert.assertTrue(singleLinkOperator.insertElementByIndex(linkDataStruct, 6, "E"));
+    Assert.assertArrayEquals(new String[]{"0", "A", "B", "C", "D", "E"},
+        singleLinkOperator.getAllElements(linkDataStruct));
+
   }
 
   @Test
@@ -37,8 +40,8 @@ public class SingleLinkOperatorTest {
   @Test
   public void testHeadInsertElements() {
     Assert.assertTrue(singleLinkOperator.headInsertElements(linkDataStruct, "AA", "BB"));
-    Assert.assertEquals("BB", singleLinkOperator.getElementByIndex(linkDataStruct, 1));
-    Assert.assertEquals("AA", singleLinkOperator.getElementByIndex(linkDataStruct, 2));
+    Assert.assertArrayEquals(new String[]{"BB", "AA", "A", "B", "C", "D"},
+        singleLinkOperator.getAllElements(linkDataStruct));
   }
 
   @Test
