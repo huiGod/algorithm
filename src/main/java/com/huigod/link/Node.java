@@ -18,6 +18,22 @@ public class Node {
     this.prev = null;
   }
 
+  Node(Node prev, String data) {
+    this.data = data;
+    this.prev = prev;
+  }
+
+  Node(Node prev, String data, Node next) {
+    this.prev = prev;
+    this.data = data;
+    this.next = next;
+  }
+
+  Node(String data, Node next) {
+    this.data = data;
+    this.next = next;
+  }
+
   public String getData() {
     return data;
   }

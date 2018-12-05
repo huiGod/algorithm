@@ -12,10 +12,9 @@ public class SingleLinkOperator {
     if (i < 1 || i > linkDataStruct.getLength()) {
       throw new RuntimeException();
     }
-    Node head = linkDataStruct.getHead().getNext();
+    Node head = linkDataStruct.getHead();
     int index = 1;
-    while (head != null && index < i) {
-      head = head.getNext();
+    while ((head = head.getNext()) != null && index < i) {
       index++;
     }
     return head.getData();
@@ -27,8 +26,7 @@ public class SingleLinkOperator {
   public String[] getAllElements(LinkDataStruct linkDataStruct) {
     String[] result = new String[linkDataStruct.getLength()];
     Node head = linkDataStruct.getHead();
-    for (int index = 0; head.getNext() != null; index++) {
-      head = head.getNext();
+    for (int index = 0; (head = head.getNext()) != null; index++) {
       result[index] = head.getData();
     }
     return result;
@@ -41,7 +39,6 @@ public class SingleLinkOperator {
     if (i < 1 || i > (linkDataStruct.getLength() + 1)) {
       return ResultEnnum.ERROR.isFlag();
     }
-    Node insertNode = new Node(data);
     Node head = linkDataStruct.getHead();
     int index = 1;
     //index<i也排除了i=1的情况
@@ -49,7 +46,7 @@ public class SingleLinkOperator {
       head = head.getNext();
       index++;
     }
-    insertNode.setNext(head.getNext());
+    Node insertNode = new Node(data, head.getNext());
     head.setNext(insertNode);
 
     linkDataStruct.setLength(linkDataStruct.getLength() + 1);
@@ -64,9 +61,9 @@ public class SingleLinkOperator {
     if (i < 1 || i > linkDataStruct.getLength()) {
       return ResultEnnum.ERROR.isFlag();
     }
-    Node head = linkDataStruct.getHead().getNext();
+    Node head = linkDataStruct.getHead();
     int index = 1;
-    while (head != null && index < i - 1) {
+    while (head.getNext() != null && index < i) {
       head = head.getNext();
       index++;
     }
@@ -87,8 +84,7 @@ public class SingleLinkOperator {
     }
     Node head = linkDataStruct.getHead();
     for (int i = 0; i < datas.length; i++) {
-      Node insertNode = new Node(datas[i]);
-      insertNode.setNext(head.getNext());
+      Node insertNode = new Node(datas[i], head.getNext());
       head.setNext(insertNode);
     }
     linkDataStruct.setLength(linkDataStruct.getLength() + datas.length);
@@ -121,9 +117,9 @@ public class SingleLinkOperator {
    */
   public boolean clearElements(LinkDataStruct linkDataStruct) {
     //获取第一个元素
-    Node head = linkDataStruct.getHead().getNext();
-    while (head != null) {
-      Node flagNode = head.getNext();
+    Node head = linkDataStruct.getHead();
+    while ((head = head.getNext()) != null) {
+      Node flagNode = head;
       head.setNext(null);
       head.setData(null);
       head = flagNode;

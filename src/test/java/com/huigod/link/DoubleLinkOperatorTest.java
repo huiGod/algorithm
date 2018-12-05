@@ -14,15 +14,12 @@ public class DoubleLinkOperatorTest {
     Node node1 = new Node("A");
     node1.setPrev(linkDataStruct.getHead());
     linkDataStruct.getHead().setNext(node1);
-    Node node2 = new Node("B");
+    Node node2 = new Node(node1, "B");
     node1.setNext(node2);
-    node2.setPrev(node1);
-    Node node3 = new Node("C");
+    Node node3 = new Node(node2, "C");
     node2.setNext(node3);
-    node3.setPrev(node2);
-    Node node4 = new Node("D");
+    Node node4 = new Node(node3, "D");
     node3.setNext(node4);
-    node4.setPrev(node3);
     node4.setNext(linkDataStruct.getTail());
     linkDataStruct.getTail().setPrev(node4);
     linkDataStruct.setLength(4);
@@ -62,7 +59,18 @@ public class DoubleLinkOperatorTest {
         doubleLinkOperator.getAllElementHeadToTail(linkDataStruct));
     Assert.assertTrue(doubleLinkOperator.removeElementByIndex(linkDataStruct, 2));
     Assert.assertTrue(doubleLinkOperator.removeElementByIndex(linkDataStruct, 1));
-    Assert.assertEquals(linkDataStruct.getHead(), linkDataStruct.getTail());
+    Assert.assertEquals(0, linkDataStruct.getLength());
+  }
+
+  @Test
+  public void testInsertToTail() {
+    Assert.assertTrue(doubleLinkOperator.insertToTail(linkDataStruct, "E"));
+    Assert.assertArrayEquals(new String[]{"A", "B", "C", "D", "E"},
+        doubleLinkOperator.getAllElementHeadToTail(linkDataStruct));
+    LinkDataStruct empty = new LinkDataStruct();
+    Assert.assertTrue(doubleLinkOperator.insertToTail(empty, "A"));
+    Assert.assertArrayEquals(new String[]{"A"}, doubleLinkOperator.getAllElementHeadToTail(empty));
+
   }
 
 }

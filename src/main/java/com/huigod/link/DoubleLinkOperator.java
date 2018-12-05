@@ -9,12 +9,15 @@ public class DoubleLinkOperator {
    * 从头到尾遍历双向链表
    */
   public String[] getAllElementHeadToTail(LinkDataStruct linkDataStruct) {
+    if (linkDataStruct.getLength() < 1) {
+      return new String[0];
+    }
     String[] result = new String[linkDataStruct.getLength()];
-    Node head = linkDataStruct.getHead().getNext();
+    Node head = linkDataStruct.getHead();
     int index = 0;
-    while (head != null && head != linkDataStruct.getTail()) {
-      result[index++] = head.getData();
+    while (head.getNext() != linkDataStruct.getTail()) {
       head = head.getNext();
+      result[index++] = head.getData();
     }
     return result;
   }
@@ -23,18 +26,21 @@ public class DoubleLinkOperator {
    * 从尾到到头遍历双向链表
    */
   public String[] getAllElementTailToHead(LinkDataStruct linkDataStruct) {
+    if (linkDataStruct.getLength() < 1) {
+      return new String[0];
+    }
     String[] result = new String[linkDataStruct.getLength()];
-    Node tail = linkDataStruct.getTail().getPrev();
+    Node tail = linkDataStruct.getTail();
     int index = 0;
-    while (tail != null && tail != linkDataStruct.getHead()) {
-      result[index++] = tail.getData();
+    while (tail.getPrev() != linkDataStruct.getHead()) {
       tail = tail.getPrev();
+      result[index++] = tail.getData();
     }
     return result;
   }
 
   /**
-   * 在i位置插入元素
+   * 在i位置插入元素 首先处理后面元素与插入元素之间的关系，因为如果先处理插入元素与前面元素的关系，那么将无法找到后续元素
    */
   public boolean insertNodeByIndex(LinkDataStruct linkDataStruct, int i, String data) {
     if (i < 1 || i > linkDataStruct.getLength() + 1) {
@@ -44,20 +50,23 @@ public class DoubleLinkOperator {
     Node head = linkDataStruct.getHead();
     int index = 1;
 
-    while (head.getNext() != null && index < i) {
+    while (head.getNext() != linkDataStruct.getTail() && index < i) {
       head = head.getNext();
       index++;
     }
     Node insertNode = new Node(data);
-    //如果插入的元素不在最后的一个元素，不用处理以下逻辑
-    if (i != linkDataStruct.getLength() + 1) {
+    //如果插入的元素是最后一个元素
+    if (i == linkDataStruct.getLength() + 1) {
+      head.setNext(insertNode);
+      insertNode.setPrev(head);
+      insertNode.setNext(linkDataStruct.getTail());
+      linkDataStruct.getTail().setPrev(insertNode);
+    } else {
       head.getNext().setPrev(insertNode);
       insertNode.setNext(head.getNext());
-      //维护尾节点元素
-      linkDataStruct.getTail().setPrev(head);
+      head.setNext(insertNode);
+      insertNode.setPrev(head);
     }
-    head.setNext(insertNode);
-    insertNode.setPrev(head);
     linkDataStruct.setLength(linkDataStruct.getLength() + 1);
     return ResultEnnum.OK.isFlag();
   }
@@ -70,11 +79,11 @@ public class DoubleLinkOperator {
     if (i <= 0 || i > length) {
       return ResultEnnum.ERROR.isFlag();
     }
-    //如果删除的是第一个元素或者最后一个元素
+    //只有一个元素被删除
     if (i == 1 && length == 1) {
       Node head = linkDataStruct.getHead();
       head.setNext(null);
-      linkDataStruct.setTail(head);
+      linkDataStruct.getTail().setPrev(null);
       linkDataStruct.setLength(length - 1);
       return ResultEnnum.OK.isFlag();
     }
@@ -98,6 +107,27 @@ public class DoubleLinkOperator {
     deleteNode.getNext().setPrev(deleteNode.getPrev());
     deleteNode = null;
     linkDataStruct.setLength(length - 1);
+    return ResultEnnum.OK.isFlag();
+  }
+
+  /**
+   * 插入元素到尾部
+   */
+  public boolean insertToTail(LinkDataStruct linkDataStruct, String data) {
+    Node tailNode = linkDataStruct.getTail();
+    Node headNode = linkDataStruct.getHead();
+    Node insertNode = new Node(data);
+    Node lastNode;
+    if (linkDataStruct.getLength() >= 1) {
+      lastNode = tailNode.getPrev();
+    } else {
+      lastNode = headNode;
+    }
+    lastNode.setNext(insertNode);
+    insertNode.setPrev(lastNode);
+    insertNode.setNext(tailNode);
+    tailNode.setPrev(insertNode);
+    linkDataStruct.setLength(linkDataStruct.getLength() + 1);
     return ResultEnnum.OK.isFlag();
   }
 }
